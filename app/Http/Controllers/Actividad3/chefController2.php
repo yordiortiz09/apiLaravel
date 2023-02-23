@@ -55,6 +55,12 @@ return response()->json([
     $chef
 ]);
 }
+public function getChefs()
+{
+    $chefs = Chef::all();
+
+    return response()->json($chefs);
+}
 public function update(Request $request, $id)
 {
     // if($request->ip()=="25.63.10.104"){

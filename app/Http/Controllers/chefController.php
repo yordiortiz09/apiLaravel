@@ -18,10 +18,10 @@ class chefController extends Controller
 $validacion = Validator::make($request->all(),[
     'nombre'=>'required|max:25',
     'ap_paterno' =>'required|max:30',
-    'ap_materno' =>'nullable|max:30',
+    'ap_materno' =>'required|max:30',
     'nacionalidad' =>'required',Rule::in(['Mexicana', 'Italiana']),
     'edad' => 'required',
-    'token'=>'required',
+    
 ]);
 if($validacion->fails()){
     return response()->json([

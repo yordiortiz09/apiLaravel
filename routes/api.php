@@ -116,7 +116,7 @@ Route::middleware(['auth:sanctum','role:Administrador,invitado'])->group(functio
     
 
 Route::post("/chefyordi",[chefController2::class,"create"]);
-Route::get("/chef/infoyordi",[chefController2::class,"info"]);
+Route::get("/chef/infoyordi",[chefController2::class,"getChefs"]);
 Route::put("/chef/updateyordi/{id}",[chefController2::class,"update"])->where('id',"[0-9]+");
 Route::delete("/chef/deleteyordi/{id}",[chefController2::class,"delete"]);
 
@@ -181,6 +181,12 @@ Route::get("/user/{id}",[UsuarioController::class,'info']);
    Route::middleware('auth:sanctum')->get('/verifyToken', function (Request $request) {
     return response()->json(['message' => 'Token válido'], 200);
 });
+Route::get("/users",[UsuarioController::class,'getUsers']);
+Route::put("/user/update/status/{id}",[UsuarioController::class,'updateStatus'])->where('id',"[0-9]+");
+Route::put("/user/update/role/{id}",[UsuarioController::class,'updateRole'])->where('id',"[0-9]+");
+Route::delete("/user/delete/{id}",[UsuarioController::class,'destroy'])->where('id',"[0-9]+");
+
+Route::put("/user/update/{id}",[UsuarioController::class,'updateUser'])->where('id',"[0-9]+");
 
 
    //Route::Post
