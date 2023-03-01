@@ -10,60 +10,52 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\role;
 
-class User extends Authenticatable 
+class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
 
-    protected $table='users';
-    protected $table2='roles';
+
+    protected $table = 'users';
+    protected $roles = 'roles';
     public function validaciondelrol(...$role)
     {
 
-        $user2 = role::where('id',$this->rol_id  )->first();
-        return in_array($user2->nombre,...$role);
+        $user2 = role::where('id', $this->rol_id)->first();
+        return in_array($user2->nombre, ...$role);
     }
     public function roles(...$role)
     {
-        if (is_array(...$role))
-        {
-            foreach ($role as $roles)
-            {
-                if ($this->hasRole(...$roles))
-                {
+        if (is_array(...$role)) {
+            foreach ($role as $roles) {
+                if ($this->hasRole(...$roles)) {
                     return true;
                 }
-            
+            }
+        } else {
+            if ($this->hasRole(...$role)) {
+                return true;
             }
         }
-                else{
-                    if ($this->hasRole(...$role))
-                    {
-                        return true;
-                    }
-                }
-            
 
-            
+
+
         return false;
     }
 
-     public function hasRole($role)
-     {
-     
-        
-      
-   
-         if ($role==$this->rol_id)
-         { 
-             return true;
-         } 
-        
-         return false;
-        
+    public function hasRole($role)
+    {
+
+
+
+
+        if ($role == $this->rol_id) {
+            return true;
+        }
+
+        return false;
     }
 
-     
+
     /**
      * The attributes that are mass assignable.
      
@@ -84,8 +76,8 @@ class User extends Authenticatable
         'status',
         'no°verificación',
         'telefono'
-        
-        
+
+
     ];
 
     /**
@@ -106,5 +98,4 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-   
 }

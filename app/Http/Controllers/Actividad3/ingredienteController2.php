@@ -12,84 +12,97 @@ use Illuminate\Support\Facades\Validator;
 
 class ingredienteController2 extends Controller
 {
-    //
+ 
     public function create(Request $request)
     {
-$validacion = Validator::make($request->all(),[
-    'ingredientes'=>'required',
-    'unidades'=>'required',
-]);
-if($validacion->fails()){
+        $validacion = Validator::make($request->all(), [
+            'ingredientes' => 'required',
+            'unidades' => 'required',
+        ]);
+        if ($validacion->fails()) {
+            return response()->json([
+                "Error" => $validacion->errors()
+            ], 400);
+        }
+        $ingrediente = new Ingrediente();
+        $ingrediente->ingredientes = $request->ingredientes;
+        $ingrediente->unidades = $request->unidades;
+        $ingrediente->save;
+
+        if ($ingrediente->save()) {
+            return response()->json([
+                "status" => 201,
+                "mgs" => " Se ha guardado exitosamente",
+                "error" => null,
+                "data" => $ingrediente
+            ]);
+        }
+    }
+    public function info(Request $request)
+    {
+        $ingrediente = DB::table('ingredientes')->get()->all();
+        return response()->json([
+            "table" => "ingredientes",
+            $ingrediente
+        ]);
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        $validacion = Validator::make($request->all(), [
+            'ingredientes' => 'required',
+            'unidades' => 'required'
+        ]);
+        if ($validacion->fails()) {
+            return response()->json([
+                "Error" => $validacion->errors()
+            ], 400);
+        }
+
+
+            $ingrediente = Ingrediente::find($id);
+            $ingrediente->ingredientes = $request->ingredientes;
+            $ingrediente->unidades = $request->unidades;
+            $ingrediente->save;
+
+            if ($ingrediente->save()) {
+                return response()->json([
+                    "status" => 201,
+                    "mgs" => " Se ha guardado exitosamente",
+                    "error" => null,
+                    "data" => $ingrediente
+                ]);
+            }
+        
+    }
+    public function infoIngrediente($id)
+{
+    $ingrediente= DB::table('ingredientes')->where('id', $id)->first();
+
+    if (!$ingrediente) {
+        return response()->json([
+            "error" => "ingrediente no encontrado"
+        ], 404);
+    }
+    return response()->json(
+        $ingrediente
+    );
+}
+public function delete(int $id)
+{
+   
+$ingrediente = Ingrediente::find($id); 
+if ($ingrediente){
+    $ingrediente ->status = false; 
+    $ingrediente ->save();
     return response()->json([
-        "Error"=>$validacion->errors()
-    ],400);
-// }
-// if($request->ip()=="25.63.10.104"){
-//     $response = Http::post('http://25.62.178.77:8000/api/ingrediente',
-//     [
-//         "ingredientes" =>$request->ingredientes,
-//          "unidades"=>$request->unidades
-//     ] );
-     }
-$ingrediente = new Ingrediente();
-$ingrediente->ingredientes =$request->ingredientes;
-$ingrediente->unidades =$request->unidades;
-$ingrediente->save;
-
-if ($ingrediente ->save()){
-return response()->json([
-    "status"=>201,
-    "mgs"=>" Se ha guardado exitosamente",
-    "error"=>null,
-    "data" =>$ingrediente
-]);
+        "status"=>200,
+        "msg"=>"Se ha eliminado correctamente",
+        "error"=>null,
+        "data"=>$ingrediente,
+    ]);
+}
 }
 
-}
-public function info(Request $request)
-{
-$ingrediente= DB::table('ingredientes')->get()->all();
-return response()->json([
-    "table" => "ingredientes",
-    $ingrediente
-]);
-}
-
-
-public function update(Request $request, $id)
-{
-$validacion = Validator::make($request->all(),[
-    'ingredientes'=>'required',
-    'unidades'=>'required'
-]);
-if($validacion->fails()){
-return response()->json([
-    "Error"=>$validacion->errors()
-],400);
-// }
-// if($request->ip()=="25.63.10.104"){
-//     $response = Http::put('http://25.62.178.77:8000/api/tipo_plato/update/'.$id,
-//     [
-//         "ingredientes" =>$request->ingredientes,
-//          "unidades"=>$request->unidades
-//     ] );
-//     }
-
-$ingrediente = Ingrediente::find($id);
-$ingrediente->ingredientes =$request->ingredientes;
-$ingrediente->unidades =$request->unidades;
-$ingrediente-> save;
-
-if ($ingrediente ->save()){
-return response()->json([
-    "status"=>201,
-    "mgs"=>" Se ha guardado exitosamente",
-    "error"=>null,
-    "data" =>$ingrediente
-]);
-}
-
-}
-
-}
 }

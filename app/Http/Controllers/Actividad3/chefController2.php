@@ -61,6 +61,19 @@ public function getChefs()
 
     return response()->json($chefs);
 }
+public function chefInfo($id)
+{
+    $chef= DB::table('chefs')->where('id', $id)->first();
+
+    if (!$chef) {
+        return response()->json([
+            "error" => "chef no encontrado"
+        ], 404);
+    }
+    return response()->json(
+        $chef
+    );
+}
 public function update(Request $request, $id)
 {
     // if($request->ip()=="25.63.10.104"){

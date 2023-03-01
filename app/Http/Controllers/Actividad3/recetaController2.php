@@ -13,6 +13,18 @@ use App\Models\Receta;
 class recetaController2 extends Controller
 {
     //
+    public function delete(Receta $receta)
+    {
+        $receta->update(['status' => 0]);
+        $receta->ingrediente->update(['status' => 0]);
+        $receta->chef->update(['status' => 0]);
+        $receta->tipoPlato->update(['status' => 0]);
+    
+        return response()->json([
+            'message' => 'Receta eliminada correctamente.',
+            'data' => $receta,
+        ]);
+    }
     
     public function create(Request $request)
     {

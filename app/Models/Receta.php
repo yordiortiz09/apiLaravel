@@ -14,16 +14,16 @@ class Receta extends Model
 
     public function ingrediente()
 {
-    return $this->hasMany(Ingrediente::class);
+    return $this->belongsTo(Ingrediente::class);
    
 }
 public function chef()
 
 {
-    return $this->hasMany(Chef::class);
+    return $this->belongsTo(Chef::class);
 }
 public function tipoPlato(){
-    return $this->hasOne(tipoPlato::class);
+    return $this->belongsTo(tipoPlato::class);
 }
 
 

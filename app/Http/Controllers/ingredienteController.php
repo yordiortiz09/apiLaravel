@@ -59,10 +59,9 @@ return response()->json([
 public function info(Request $request)
 {
 $ingrediente= DB::table('ingredientes')->get()->all();
-return response()->json([
-    "table" => "ingredientes",
+return response()->json(
     $ingrediente
-]);
+);
 }
 
 

@@ -45,12 +45,22 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+
 Route::get("/conductor",[ConductoreController::class,"index"]);
 Route::post("/conductor/crear",[ConductoreController::class,"create"]);
 Route::put("/conductor/actualizar/{id?}",[ConductoreController::class,"update"])->where("id","[0-9]+");
 Route::delete("/conductor/borrar/{id?}",[ConductoreController::class,"delete"])->where("id","[0-9]+");
 
 Route::middleware(['auth:sanctum','role:Administrador'])->group(function(){
+   
+    Route::put("/user/update/status/{id}",[UsuarioController::class,'updateStatus'])->where('id',"[0-9]+");
+    Route::put("/user/update/role/{id}",[UsuarioController::class,'updateRole'])->where('id',"[0-9]+");
+    Route::delete("/user/delete/{id}",[UsuarioController::class,'destroy'])->where('id',"[0-9]+");
+    Route::put("/user/update/{id}",[UsuarioController::class,'updateUser'])->where('id',"[0-9]+");
+    Route::get("/users",[UsuarioController::class,'getUsers']);
+
+    
     
 
  Route::get("/conductoryordi",[yordiConductorController::class,"index"]);
@@ -117,6 +127,7 @@ Route::middleware(['auth:sanctum','role:Administrador,invitado'])->group(functio
 
 Route::post("/chefyordi",[chefController2::class,"create"]);
 Route::get("/chef/infoyordi",[chefController2::class,"getChefs"]);
+Route::get("/chef/infoyordi/{id}",[chefController2::class,"chefInfo"]);
 Route::put("/chef/updateyordi/{id}",[chefController2::class,"update"])->where('id',"[0-9]+");
 Route::delete("/chef/deleteyordi/{id}",[chefController2::class,"delete"]);
 
@@ -134,13 +145,16 @@ Route::middleware(['auth:sanctum','role:Administrador,Usuario'])->group(function
 Route::post("/recetayordi",[recetaController2::class,"create"]);
 Route::get("/receta/infoyordi",[recetaController2::class,"info"]);
 Route::put("/receta/updateyordi/{id}",[recetaController2::class,"update"])->where('id',"[0-9]+");
+Route::delete("/receta/deleteyordi/{id}",[recetaController2::class,"delete"]);
 });
+
 
 //------------------------------------------------------------------------------------------------
 
 Route::post("/ingrediente",[ingredienteController::class,"create"]);
-Route::get("/ingrediente/info",[ingredienteController::class,"info"]);
+Route::get("/ingredientes/info",[ingredienteController::class,"info"]);
 Route::put("/ingrediente/update/{id}",[ingredienteController::class,"update"])->where('id',"[0-9]+");
+
 
 Route::middleware(['auth:sanctum','role:Administrador,invitado,Usuario'])->group(function(){
     
@@ -148,6 +162,9 @@ Route::middleware(['auth:sanctum','role:Administrador,invitado,Usuario'])->group
 Route::post("/ingredienteyordi",[ingredienteController2::class,"create"]);
 Route::get("/ingredienteyordi/info",[ingredienteController2::class,"info"]);
 Route::put("/ingredienteyordi/update/{id}",[ingredienteController2::class,"update"])->where('id',"[0-9]+");
+Route::get("/ingredienteyordi/info/{id}",[ingredienteController2::class,"infoIngrediente"]);
+Route::delete("/ingredienteyordi/delete/{id}",[ingredienteController2::class,"delete"]);
+
 });
 
 //------------------------------------------------------------------------------------------------------
@@ -159,12 +176,16 @@ Route::get("/tipo_plato/info",[tipoPlatoController::class,"info"]);
 
 
 //tipo plato para mi base de datos
-Route::middleware(['auth:sanctum','role:[Administrador,invitado]'])->group(function(){
+Route::middleware(['auth:sanctum','role:Administrador,invitado'])->group(function(){
     Route::post("/tipo_platoyordi",[tipoPlatoController2::class,"create"]);
 Route::put("/tipo_platoyordi/update/{id}",[tipoPlatoController2::class,"update"])->where('id',"[0-9]+");
 Route::get("/tipo_platoyoerdi/info",[tipoPlatoController2::class,"info"]);
-Route::delete("/cerrar",[UsuarioController::class,'logout']);
+Route::get("/tipo_platoyordi/info/{id}",[tipoPlatoController2::class,"infoPlato"]);
+Route::delete("/tipo_platoyordi/delete/{id}",[tipoPlatoController2::class,"delete"]);
 });
+
+Route::delete("/cerrar",[UsuarioController::class,'logout']);
+
 
 Route::post("/user/regis",[UsuarioController::class,'crearusuario']);
 
@@ -181,12 +202,21 @@ Route::get("/user/{id}",[UsuarioController::class,'info']);
    Route::middleware('auth:sanctum')->get('/verifyToken', function (Request $request) {
     return response()->json(['message' => 'Token válido'], 200);
 });
-Route::get("/users",[UsuarioController::class,'getUsers']);
-Route::put("/user/update/status/{id}",[UsuarioController::class,'updateStatus'])->where('id',"[0-9]+");
-Route::put("/user/update/role/{id}",[UsuarioController::class,'updateRole'])->where('id',"[0-9]+");
-Route::delete("/user/delete/{id}",[UsuarioController::class,'destroy'])->where('id',"[0-9]+");
 
-Route::put("/user/update/{id}",[UsuarioController::class,'updateUser'])->where('id',"[0-9]+");
+// Route::get('/verify-role', function (Request $request) {
+//     return response()->json(['message' => 'Usuario con rol'], 200);
+// })->middleware('role:Administrador,invitado,Usuario' ,'auth:sanctum');
+
+Route::middleware('auth:sanctum','role:Administrador')->get('/verify-role', function (Request $request) {
+    $user = $request->user();
+        return response()->json(['message' => 'Usuario con rol de administrador'], 200);
+});
+Route::middleware('auth:sanctum','role:Usuario')->get('/verify/role', function (Request $request) {
+        return response()->json(['message' => 'Usuario con rol de Usuario'], 200);
+});
+
+
+
 
 
    //Route::Post
